@@ -3,10 +3,10 @@ import express from 'express';
 import * as db from './model/model.js';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import axios from 'axios';
+
 
 const app = express();
-const PORT = 5000;
+const PORT = 3000;
 
 app.use(bodyParser.urlencoded(({extended: false})));
 app.use(bodyParser.json());
@@ -29,11 +29,10 @@ app.post('/', (req, res) => {
 });
 
 
-// add restaurant to restaurants array in list
-app.put('/', (req, res) => {
-  var listName = req.query.list_name; 
-  db.addRestaurantToList(listName, req.body.title, req.body.category, req.body.img, 
-        req.body.city, req.body.latitude, req.body.longitude)
+// add a show
+app.post('/:_id', (req, res) => {
+  var listId = req.params._id;
+  db.addShowToList(listId, req.body.title, req.body.genre, req.body.streamingService)
   .then(result => {
     res.status(201).json(result);
   })
@@ -50,7 +49,7 @@ app.get('/:_id', (req, res) => {
   const id = req.params._id;
   db.findList(id)
   .then(user => {
-    res.status(201).json(user);
+    res.status(201).json(user.shows);
   })
   .catch(error => {
     res.status(500).json({Error: 'Request failed' });
@@ -60,7 +59,7 @@ app.get('/:_id', (req, res) => {
 
 
 
-//find all the list for drop down selection
+//find all the lists
 app.get('/', (req, res) => {
   const filter = {}
   db.findAllList(filter)
@@ -75,11 +74,11 @@ app.get('/', (req, res) => {
 
 
 
-//delete restaurant from the list by RESTAURANT ID
-app.delete('/', (req, res) => {
+//delete a show
+app.delete('/show', (req, res) => {
   var list_id = req.query.list_id;
-  var restaurant_id = req.query.restaurant_id;
-  db.deleteRestaurant(list_id, restaurant_id)
+  var show_id = req.query.show_id;
+  db.deleteShow(list_id, show_id)
   .then(deletedCount => {
     if (deletedCount === 1) {
       res.status(204).send();
@@ -93,6 +92,25 @@ app.delete('/', (req, res) => {
   })
 });
 
+
+
+//delete a list by _id
+app.delete('/:_id', (req, res) => {
+  const listId = req.params._id
+
+  db.deleteById(listId)
+  .then(deletedCount => {
+    if (deletedCount === 1) {
+      res.status(204).send();
+    } else {
+      res.status(500).json({Error: 'Object not found'});
+    }
+  })
+  .catch(error => {
+    res.status(500).json({Error: 'Request failed' });
+    console.log(error);
+  })
+});
 
 
 
