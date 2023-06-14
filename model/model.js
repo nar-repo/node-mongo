@@ -4,7 +4,7 @@ const { Schema, model } = mongoose;
 
 
 
-const uri = "mongodb+srv://nahm1529:0415@cluster0.uaud6cv.mongodb.net/app1?retryWrites=true&w=majority"
+const uri = "mongodb+srv://XXXXXXXX@cluster0.uaud6cv.mongodb.net/app1?retryWrites=true&w=majority"
 mongoose.connect(
   uri,
   { 
