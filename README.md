@@ -1,5 +1,5 @@
-# node-mongo
 
+# Watchlist Manager
 
 :point_down: Demonstration :point_down:
 
